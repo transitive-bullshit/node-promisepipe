@@ -3,6 +3,7 @@
 var stream = require("stream");
 var fs = require("mz/fs");
 var assert = require("assert");
+var through2 = require("through2");
 var util = require("util");
 
 var promisePipe = require("./index");
@@ -164,6 +165,23 @@ describe("promisePipe", function() {
             assert(err);
             assert.equal(err.originalError.message, "Write failed");
         });
+    });
+
+    it("can pipe via through2", function() {
+        var input = fs.createReadStream(INPUT);
+        var output = fs.createWriteStream(OUTPUT);
+
+        return promisePipe(input, through2(), output).then(function() {
+            return fs
+              .readFile(OUTPUT)
+              .then(data => assert.equal(data.toString().trim(), "foobar"));
+        });
+    });
+
+    it.only("can pipe via through2", function() {
+        var input = fs.createReadStream(INPUT);
+
+        return promisePipe(input, through2());
     });
 });
 

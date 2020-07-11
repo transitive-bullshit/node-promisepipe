@@ -25,6 +25,7 @@ function streamPromise(stream) {
   // see https://github.com/epeli/node-promisepipe/issues/2
   // and https://github.com/epeli/node-promisepipe/issues/15
   const events = stream.readable || typeof stream._read === 'function' ? readableEvents : writableEvents;
+  console.log(stream)
 
   function on(evt) {
     function executor(resolve, reject) {
